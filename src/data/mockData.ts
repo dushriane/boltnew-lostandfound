@@ -1,0 +1,132 @@
+import type { Item } from '../types';
+
+export const mockItems: Item[] = [
+  {
+    id: '1',
+    type: 'lost',
+    title: 'Black iPhone 14 Pro',
+    description: 'Black iPhone 14 Pro with a clear case. Has a small scratch on the back. Contains important work contacts.',
+    category: 'Electronics',
+    location: 'Central Park, NYC',
+    dateReported: new Date('2024-01-15'),
+    dateOccurred: new Date('2024-01-14'),
+    contactName: 'Sarah Johnson',
+    contactEmail: 'sarah.johnson@email.com',
+    contactPhone: '+1-555-0123',
+    status: 'active',
+    tags: ['phone', 'apple', 'work'],
+    color: 'Black',
+    brand: 'Apple',
+    reward: 100
+  },
+  {
+    id: '2',
+    type: 'found',
+    title: 'iPhone with Clear Case',
+    description: 'Found an iPhone with a clear protective case near the fountain. Screen is cracked but phone seems to work.',
+    category: 'Electronics',
+    location: 'Central Park Fountain',
+    dateReported: new Date('2024-01-15'),
+    dateOccurred: new Date('2024-01-14'),
+    contactName: 'Mike Chen',
+    contactEmail: 'mike.chen@email.com',
+    contactPhone: '+1-555-0456',
+    status: 'active',
+    tags: ['phone', 'cracked', 'fountain'],
+    color: 'Black',
+    brand: 'Apple'
+  },
+  {
+    id: '3',
+    type: 'lost',
+    title: 'Brown Leather Wallet',
+    description: 'Brown leather wallet with driver\'s license, credit cards, and about $80 cash. Has a photo of my family inside.',
+    category: 'Personal Items',
+    location: 'Times Square Subway Station',
+    dateReported: new Date('2024-01-16'),
+    dateOccurred: new Date('2024-01-16'),
+    contactName: 'David Rodriguez',
+    contactEmail: 'david.rodriguez@email.com',
+    status: 'active',
+    tags: ['wallet', 'leather', 'cash', 'cards'],
+    color: 'Brown',
+    brand: 'Coach'
+  },
+  {
+    id: '4',
+    type: 'found',
+    title: 'Leather Wallet',
+    description: 'Found a brown leather wallet on the subway platform. Contains ID and cards. Turned in to station master.',
+    category: 'Personal Items',
+    location: 'Times Square Station',
+    dateReported: new Date('2024-01-16'),
+    dateOccurred: new Date('2024-01-16'),
+    contactName: 'Emma Wilson',
+    contactEmail: 'emma.wilson@email.com',
+    status: 'active',
+    tags: ['wallet', 'subway', 'id'],
+    color: 'Brown'
+  },
+  {
+    id: '5',
+    type: 'lost',
+    title: 'Blue Backpack with Laptop',
+    description: 'Navy blue Jansport backpack containing MacBook Pro, charger, and textbooks. Lost during morning commute.',
+    category: 'Bags',
+    location: 'Grand Central Terminal',
+    dateReported: new Date('2024-01-17'),
+    dateOccurred: new Date('2024-01-17'),
+    contactName: 'Alex Thompson',
+    contactEmail: 'alex.thompson@email.com',
+    status: 'active',
+    tags: ['backpack', 'laptop', 'student', 'commute'],
+    color: 'Blue',
+    brand: 'Jansport',
+    reward: 200
+  },
+  {
+    id: '6',
+    type: 'found',
+    title: 'Set of Car Keys',
+    description: 'Found a set of car keys with Toyota key fob and house keys on a keychain that says "Best Dad Ever".',
+    category: 'Keys',
+    location: 'Bryant Park',
+    dateReported: new Date('2024-01-18'),
+    dateOccurred: new Date('2024-01-18'),
+    contactName: 'Lisa Park',
+    contactEmail: 'lisa.park@email.com',
+    status: 'active',
+    tags: ['keys', 'toyota', 'keychain'],
+    brand: 'Toyota'
+  }
+];
+
+export const categories = [
+  'Electronics',
+  'Personal Items',
+  'Bags',
+  'Keys',
+  'Jewelry',
+  'Clothing',
+  'Documents',
+  'Sports Equipment',
+  'Books',
+  'Other'
+];
+
+export const colors = [
+  'Black',
+  'White',
+  'Brown',
+  'Blue',
+  'Red',
+  'Green',
+  'Yellow',
+  'Gray',
+  'Silver',
+  'Gold',
+  'Pink',
+  'Purple',
+  'Orange',
+  'Other'
+];
