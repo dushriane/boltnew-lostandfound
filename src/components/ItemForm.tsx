@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useAuthStore } from '../store/authStore';
 import type { Item } from '../types';
 import { categories, colors } from '../data/mockData';
 import { Calendar, MapPin, User, Mail, Phone, DollarSign, Sparkles } from 'lucide-react';
@@ -13,9 +14,6 @@ interface ItemFormData {
   category: string;
   location: string;
   dateOccurred: string;
-  contactName: string;
-  contactEmail: string;
-  contactPhone?: string;
   color?: string;
   brand?: string;
   size?: string;
@@ -23,12 +21,13 @@ interface ItemFormData {
 }
 
 interface ItemFormProps {
-  onSubmit: (data: Omit<Item, 'id' | 'dateReported' | 'status'>) => void;
+  onSubmit: (data: Omit<Item, 'id' | 'dateReported' | 'status' | 'isVerified' | 'userId' | 'contactName' | 'contactEmail' | 'contactPhone'>) => void;
   initialData?: Partial<ItemFormData>;
   isLoading?: boolean;
 }
 
 export function ItemForm({ onSubmit, initialData, isLoading }: ItemFormProps) {
+  const { user } = useAuthStore();
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<ItemFormData>({
     defaultValues: {
       type: 'lost',
@@ -41,6 +40,8 @@ export function ItemForm({ onSubmit, initialData, isLoading }: ItemFormProps) {
   const [processingAI, setProcessingAI] = useState(false);
 
   const itemType = watch('type');
+
+  if (!user) return null;
 
   const handleAIAnalysis = (analysis: any) => {
     setAIAnalysis(analysis);
@@ -83,6 +84,10 @@ export function ItemForm({ onSubmit, initialData, isLoading }: ItemFormProps) {
       
       onSubmit({
         ...rest,
+        userId: user.id,
+        contactName: user.name,
+        contactEmail: user.email,
+        contactPhone: user.phone,
         description: enhancedDescription,
         dateOccurred: new Date(dateOccurred),
         tags: aiAnalysis?.tags || [],
@@ -281,71 +286,49 @@ export function ItemForm({ onSubmit, initialData, isLoading }: ItemFormProps) {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <DollarSign className="w-4 h-4 inline mr-1" />
-            Reward (Optional)
+            Reward (Optional) - RWF
           </label>
           <input
             type="number"
             min="0"
+            step="100"
             {...register('reward', { min: 0 })}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            placeholder="Enter reward amount"
+            placeholder="Enter reward amount in RWF"
           />
+          <p className="mt-1 text-xs text-gray-500">
+            Offering a reward can increase the chances of your item being returned
+          </p>
         </div>
       )}
 
-      {/* Contact Information */}
+      {/* Contact Information Display */}
       <div className="border-t pt-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">Contact Information</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <User className="w-4 h-4 inline mr-1" />
-              Full Name *
-            </label>
-            <input
-              type="text"
-              {...register('contactName', { required: 'Name is required' })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
-            {errors.contactName && (
-              <p className="mt-1 text-sm text-error-600">{errors.contactName.message}</p>
+        <div className="bg-gray-50 rounded-lg p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <p className="text-sm text-gray-900">{user.name}</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <p className="text-sm text-gray-900">{user.email}</p>
+            </div>
+            {user.phone && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                <p className="text-sm text-gray-900">{user.phone}</p>
+              </div>
             )}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+              <p className="text-sm text-gray-900 capitalize">
+                {user.role}
+                {user.studentId && ` (${user.studentId})`}
+              </p>
+            </div>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Mail className="w-4 h-4 inline mr-1" />
-              Email Address *
-            </label>
-            <input
-              type="email"
-              {...register('contactEmail', { 
-                required: 'Email is required',
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: 'Invalid email address'
-                }
-              })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
-            {errors.contactEmail && (
-              <p className="mt-1 text-sm text-error-600">{errors.contactEmail.message}</p>
-            )}
-          </div>
-        </div>
-
-        <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <Phone className="w-4 h-4 inline mr-1" />
-            Phone Number (Optional)
-          </label>
-          <input
-            type="tel"
-            {...register('contactPhone')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            placeholder="+1-555-0123"
-          />
         </div>
       </div>
 
