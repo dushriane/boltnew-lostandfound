@@ -1,15 +1,15 @@
-# University Lost & Found System 🎓📱
+# Lost & Found MatchMaker 
 
 A comprehensive web application designed to help university communities reunite with their lost belongings through smart matching technology and seamless user experience.
 
-![University Lost & Found System](https://images.pexels.com/photos/267507/pexels-photo-267507.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop)
+![Lost & Found MatchMaker](https://images.pexels.com/photos/267507/pexels-photo-267507.jpeg?auto=compress&cs=tinysrgb&w=1200&h=400&fit=crop)
 
 ## 🌟 About the Project
 
 ### Inspiration
-The idea for this project came from observing the daily struggles of university students and faculty who lose personal items on campus. Traditional lost and found systems rely on manual checking and word-of-mouth, which often results in items never being reunited with their owners. We wanted to create a digital solution that leverages modern technology to automate the matching process and increase the success rate of item recovery.
+The idea for this project came from observing the daily struggles of university students who lose personal items on campus. Traditional lost and found systems rely on manual checking and word-of-mouth, which often results in items never being reunited with their owners. We wanted to create a digital solution that leverages modern technology to automate the matching process and increase the success rate of item recovery.
 
-### What We Learned
+### What I Learned
 - **AI Integration**: Implementing computer vision for image analysis and description enhancement
 - **Pattern Matching**: Developing sophisticated algorithms to match lost and found items based on multiple criteria
 - **Real-time Notifications**: Building a comprehensive notification system with email integration
@@ -17,7 +17,7 @@ The idea for this project came from observing the daily struggles of university 
 - **Role-based Authentication**: Creating secure access controls for different user types
 - **State Management**: Using Zustand for efficient and persistent data management
 
-### How We Built It
+### How I Built It
 The project was built using modern web technologies with a focus on user experience and scalability:
 
 1. **Frontend Architecture**: React with TypeScript for type safety and better development experience
@@ -34,7 +34,6 @@ The project was built using modern web technologies with a focus on user experie
 - **Image Processing**: Implementing AI-powered image analysis for better matching accuracy
 - **Payment Integration**: Adapting to Rwanda's mobile money ecosystem with proper validation
 - **User Experience**: Balancing feature richness with simplicity and ease of use
-- **Data Persistence**: Managing complex relationships between users, items, matches, and notifications
 
 ## 🚀 Features
 
@@ -124,8 +123,8 @@ The project was built using modern web technologies with a focus on user experie
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/university-lost-found.git
-   cd university-lost-found
+   git clone https://github.com/dushriane/boltnew-lostandfound.git
+   cd boltnew-lostandfound
    ```
 
 2. **Install dependencies**
@@ -187,48 +186,10 @@ src/
 └── data/               # Mock data and constants
 ```
 
-## 🤝 Contributing
-
-We welcome contributions from the community! Please follow these steps:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/AmazingFeature`)
-3. **Commit** your changes (`git commit -m 'Add some AmazingFeature'`)
-4. **Push** to the branch (`git push origin feature/AmazingFeature`)
-5. **Open** a Pull Request
-
-### Development Guidelines
-- Follow TypeScript best practices
-- Write meaningful commit messages
-- Add tests for new features
-- Update documentation as needed
-- Ensure responsive design compatibility
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **University Community** - For inspiring this solution
-- **Rwanda ICT Chamber** - For mobile money integration guidance
-- **Open Source Community** - For the amazing tools and libraries
-- **Beta Testers** - Students and faculty who provided valuable feedback
-
-## 📞 Contact & Support
-
-- **Project Maintainer**: [Your Name](mailto:your.email@university.edu)
-- **University IT Support**: [support@university.edu](mailto:support@university.edu)
-- **Bug Reports**: [GitHub Issues](https://github.com/yourusername/university-lost-found/issues)
-
-## 🔮 Future Enhancements
-
-- **Mobile App**: Native iOS and Android applications
-- **Multi-language Support**: Kinyarwanda, French, and English
-- **Advanced AI**: Improved image recognition and matching
-- **Campus Map Integration**: Visual location-based searching
-- **Blockchain Verification**: Immutable item ownership records
-- **Social Features**: User ratings and community feedback
 
 ---
 
