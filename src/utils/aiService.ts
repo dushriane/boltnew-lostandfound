@@ -5,7 +5,7 @@ export class AIService {
 
   private constructor() {
     // In production, this would come from environment variables
-    this.apiKey = process.env.VITE_OPENAI_API_KEY || '';
+    this.apiKey = import.meta.env.VITE_OPENAI_API_KEY || '';
   }
 
   static getInstance(): AIService {
