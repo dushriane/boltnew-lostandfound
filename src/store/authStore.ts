@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { User } from '../types';
+import { mockUsers } from '../data/mockData';
 
 interface AuthState {
   user: User | null;
@@ -22,42 +23,8 @@ interface RegisterData {
   department?: string;
 }
 
-// Mock users database
-const mockUsers: (User & { password: string })[] = [
-  {
-    id: '1',
-    email: 'admin@university.edu',
-    password: 'admin123',
-    name: 'Lost & Found Admin',
-    role: 'admin',
-    department: 'Student Services',
-    createdAt: new Date('2024-01-01'),
-    isActive: true,
-  },
-  {
-    id: '2',
-    email: 'john.doe@student.university.edu',
-    password: 'student123',
-    name: 'John Doe',
-    phone: '+250788123456',
-    role: 'student',
-    studentId: 'ST2024001',
-    department: 'Computer Science',
-    createdAt: new Date('2024-01-15'),
-    isActive: true,
-  },
-  {
-    id: '3',
-    email: 'prof.smith@university.edu',
-    password: 'faculty123',
-    name: 'Prof. Sarah Smith',
-    phone: '+250788654321',
-    role: 'faculty',
-    department: 'Mathematics',
-    createdAt: new Date('2024-01-10'),
-    isActive: true,
-  },
-];
+// Use the mock users from mockData
+let users = [...mockUsers];
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -72,7 +39,7 @@ export const useAuthStore = create<AuthState>()(
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000));
         
-        const user = mockUsers.find(u => u.email === email && u.password === password);
+        const user = users.find(u => u.email === email && u.password === password);
         
         if (user && user.isActive) {
           const { password: _, ...userWithoutPassword } = user;
@@ -95,7 +62,7 @@ export const useAuthStore = create<AuthState>()(
         await new Promise(resolve => setTimeout(resolve, 1000));
         
         // Check if user already exists
-        const existingUser = mockUsers.find(u => u.email === userData.email);
+        const existingUser = users.find(u => u.email === userData.email);
         if (existingUser) {
           set({ isLoading: false });
           return false;
@@ -115,7 +82,7 @@ export const useAuthStore = create<AuthState>()(
           isActive: true,
         };
         
-        mockUsers.push(newUser);
+        users.push(newUser);
         
         const { password: _, ...userWithoutPassword } = newUser;
         set({ 
@@ -137,9 +104,9 @@ export const useAuthStore = create<AuthState>()(
           set({ user: updatedUser });
           
           // Update in mock database
-          const userIndex = mockUsers.findIndex(u => u.id === currentUser.id);
+          const userIndex = users.findIndex(u => u.id === currentUser.id);
           if (userIndex !== -1) {
-            mockUsers[userIndex] = { ...mockUsers[userIndex], ...updates };
+            users[userIndex] = { ...users[userIndex], ...updates };
           }
         }
       },
