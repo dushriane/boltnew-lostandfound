@@ -1,10 +1,10 @@
 import React from 'react';
-import { useItems } from '../hooks/useItems';
+import { useDataStore } from '../store/dataStore';
 import { BarChart3, TrendingUp, MapPin, Calendar, Award } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 export function StatsPage() {
-  const { items, matches } = useItems();
+  const { items, matches } = useDataStore();
 
   // Calculate statistics
   const stats = {

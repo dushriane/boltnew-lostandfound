@@ -9,7 +9,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import type { Item } from '../types';
 
 export function HomePage() {
-  const { getAllItems } = useDataStore();
+  const { items: allItems } = useDataStore();
   const { user } = useAuthStore();
   const [items, setItems] = useState<Item[]>([]);
   const [hasMore, setHasMore] = useState(true);
@@ -28,24 +28,25 @@ export function HomePage() {
 
   useEffect(() => {
     loadInitialItems();
-  }, [searchTerm, selectedCategory, selectedType, sortBy]);
+  }, [searchTerm, selectedCategory, selectedType, sortBy, allItems]);
 
   const loadInitialItems = () => {
-    const newItems = getAllItems(1, ITEMS_PER_PAGE);
-    const filteredItems = filterItems(newItems);
-    setItems(filteredItems);
+    const filteredItems = filterItems(allItems);
+    const paginatedItems = filteredItems.slice(0, ITEMS_PER_PAGE);
+    setItems(paginatedItems);
     setPage(1);
-    setHasMore(filteredItems.length === ITEMS_PER_PAGE);
+    setHasMore(filteredItems.length > ITEMS_PER_PAGE);
   };
 
   const loadMoreItems = () => {
+    const filteredItems = filterItems(allItems);
     const nextPage = page + 1;
-    const newItems = getAllItems(nextPage, ITEMS_PER_PAGE);
-    const filteredItems = filterItems(newItems);
+    const startIndex = (nextPage - 1) * ITEMS_PER_PAGE;
+    const newItems = filteredItems.slice(startIndex, startIndex + ITEMS_PER_PAGE);
     
-    setItems(prev => [...prev, ...filteredItems]);
+    setItems(prev => [...prev, ...newItems]);
     setPage(nextPage);
-    setHasMore(filteredItems.length === ITEMS_PER_PAGE);
+    setHasMore(startIndex + newItems.length < filteredItems.length);
   };
 
   const filterItems = (itemsToFilter: Item[]) => {
@@ -77,10 +78,11 @@ export function HomePage() {
     }
   };
 
+  const filteredItemsCount = filterItems(allItems).length;
   const stats = {
-    total: items.length,
-    lost: items.filter(item => item.type === 'lost').length,
-    found: items.filter(item => item.type === 'found').length,
+    total: filteredItemsCount,
+    lost: allItems.filter(item => item.type === 'lost' && item.status === 'active').length,
+    found: allItems.filter(item => item.type === 'found' && item.status === 'active').length,
   };
 
   return (
@@ -165,7 +167,7 @@ export function HomePage() {
       <div>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-900">
-            {items.length} {items.length === 1 ? 'Item' : 'Items'} Found
+            {filteredItemsCount} {filteredItemsCount === 1 ? 'Item' : 'Items'} Found
           </h2>
           
           {(searchTerm || selectedCategory || selectedType !== 'all') && (
@@ -227,12 +229,14 @@ export function HomePage() {
       </div>
 
       {/* Payment Modal */}
-      <PaymentModal
-        isOpen={paymentModal.isOpen}
-        onClose={() => setPaymentModal({ isOpen: false })}
-        item={paymentModal.item!}
-        receiverId={paymentModal.receiverId!}
-      />
+      {paymentModal.isOpen && paymentModal.item && paymentModal.receiverId && (
+        <PaymentModal
+          isOpen={paymentModal.isOpen}
+          onClose={() => setPaymentModal({ isOpen: false })}
+          item={paymentModal.item}
+          receiverId={paymentModal.receiverId}
+        />
+      )}
     </div>
   );
 }

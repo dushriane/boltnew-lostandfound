@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useItems } from '../hooks/useItems';
+import { useDataStore } from '../store/dataStore';
 import { MatchCard } from '../components/MatchCard';
 import { Mail, CheckCircle, XCircle, Clock } from 'lucide-react';
 
 export function MatchesPage() {
-  const { matches, items, confirmMatch, rejectMatch } = useItems();
+  const { matches, items, confirmMatch, rejectMatch } = useDataStore();
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'rejected'>('all');
 
   const filteredMatches = matches.filter(match => {
