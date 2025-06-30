@@ -21,7 +21,7 @@ interface ItemFormData {
 }
 
 interface ItemFormProps {
-  onSubmit: (data: Omit<Item, 'id' | 'dateReported' | 'status' | 'isVerified' | 'userId' | 'contactName' | 'contactEmail' | 'contactPhone'>) => void;
+  onSubmit: (data: Omit<Item, 'id' | 'dateReported' | 'status' | 'isVerified'>) => void;
   initialData?: Partial<ItemFormData>;
   isLoading?: boolean;
 }
@@ -82,7 +82,8 @@ export function ItemForm({ onSubmit, initialData, isLoading }: ItemFormProps) {
         enhancedDescription = await aiService.enhanceDescription(data.description, aiAnalysis);
       }
       
-      onSubmit({
+      // Create the item data with all required fields
+      const itemData: Omit<Item, 'id' | 'dateReported' | 'status' | 'isVerified'> = {
         ...rest,
         userId: user.id,
         contactName: user.name,
@@ -95,7 +96,9 @@ export function ItemForm({ onSubmit, initialData, isLoading }: ItemFormProps) {
         aiDescription: aiAnalysis?.description,
         imageEmbeddings: imageEmbeddings.length > 0 ? imageEmbeddings : undefined,
         images: images.length > 0 ? images.map(img => URL.createObjectURL(img)) : undefined
-      });
+      };
+      
+      onSubmit(itemData);
     } catch (error) {
       console.error('Error processing form:', error);
     } finally {
