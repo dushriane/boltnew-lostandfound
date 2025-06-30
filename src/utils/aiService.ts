@@ -5,7 +5,8 @@ export class AIService {
 
   private constructor() {
     // In production, this would come from environment variables
-    this.apiKey = import.meta.env.VITE_OPENAI_API_KEY || '';
+    // Using optional chaining to handle cases where import.meta.env might not be available
+    this.apiKey = (typeof import !== 'undefined' && import.meta?.env?.VITE_OPENAI_API_KEY) || '';
   }
 
   static getInstance(): AIService {
