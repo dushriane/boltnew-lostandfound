@@ -1,3 +1,5 @@
+import { max } from "date-fns";
+
 // AI Service for image analysis and description generation
 export class AIService {
   private static instance: AIService;
@@ -5,8 +7,7 @@ export class AIService {
 
   private constructor() {
     // In production, this would come from environment variables
-    // Using optional chaining to handle cases where import.meta.env might not be available
-    this.apiKey = (typeof import !== 'undefined' && import.meta?.env?.VITE_OPENAI_API_KEY) || '';
+    this.apiKey = import.meta.env.VITE_OPENAI_API_KEY || '';
   }
 
   static getInstance(): AIService {
@@ -29,11 +30,52 @@ export class AIService {
       // Convert image to base64
       const base64Image = await this.fileToBase64(imageFile);
       
-      // For demo purposes, we'll simulate AI analysis
-      // In production, this would call OpenAI Vision API or similar
-      const mockAnalysis = await this.simulateAIAnalysis(imageFile.name);
-      
-      return mockAnalysis;
+      const response = await fetch('https://api.openai.com/v1/images/generations', {
+        method: 'POST',
+        headers:{
+          'Authorization': `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o',
+          messages: [
+            {
+              role: 'user',
+              content: [
+                {type: 'text', text:'Describe this image and extract tags, category, color, and brand if applicable.'},
+                {type: 'image_url', image_url: base64Image}
+              ]
+              
+            }
+          ],
+          max_tokens: 500,
+        })
+      });
+
+      const data = await response.json();
+    // Parse the AI's response (assuming it returns a JSON string in the content)
+    const content = data.choices?.[0]?.message?.content;
+    let result = {
+      description: "",
+      tags: [],
+      category: "",
+      color: undefined,
+      brand: undefined,
+      confidence: 1
+    };
+    if (content) {
+      try {
+        // Try to parse JSON from the AI's response
+        const parsed = JSON.parse(content);
+        result = {
+          ...result,
+          ...parsed
+        };
+      } catch {
+        result.description = content;
+      }
+    }
+    return result;
     } catch (error) {
       console.error('Error analyzing image:', error);
       throw new Error('Failed to analyze image');
