@@ -3,12 +3,8 @@ import { useDataStore } from '../store/dataStore';
 import { useAuthStore } from '../store/authStore';
 import { 
   Bell, 
-  BellOff, 
   Check, 
   Trash2, 
-  Filter,
-  Search,
-  Mail,
   MessageSquare,
   CheckCircle,
   AlertCircle,

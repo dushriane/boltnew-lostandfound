@@ -5,9 +5,11 @@ export interface User {
   phone?: string;
   department?: string;
   studentId?: string;
-  role: 'admin' | 'user';
+  role: 'admin' | 'user' | 'faculty' | 'student';
   status: 'active' | 'inactive';
+  isActive: boolean;
   joinDate: Date;
+  createdAt: Date; 
   avatar?: string;
 }
 
@@ -72,14 +74,14 @@ export interface Payment {
 
 export interface Notification {
   id: string;
-  userId: string;
-  type: 'match_found' | 'item_claimed' | 'payment_received' | 'admin_message';
+  type: 'match_found' | 'item_claimed' | 'payment_received' | 'admin_message' | 'match' | 'contact' | 'system';
   title: string;
   message: string;
-  isRead: boolean;
   createdAt: Date;
-  relatedItemId?: string;
-  relatedMatchId?: string;
+  isRead: boolean;
+  userId: string;
+  relatedItemId?: string; 
+  relatedMatchId?: string; 
 }
 
 export interface AdminStats {

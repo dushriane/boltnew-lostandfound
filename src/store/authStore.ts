@@ -10,7 +10,7 @@ interface AuthState {
   login: (email: string, password: string) => Promise<boolean>;
   register: (userData: RegisterData) => Promise<boolean>;
   logout: () => void;
-  updateProfile: (updates: Partial<User>) => void;
+  updateProfile: (data: Partial<User>) => void;
   toggleUserStatus: (userId: string) => void;
   getAllUsers: () => (User & { password: string })[];
 }
@@ -36,68 +36,26 @@ export const useAuthStore = create<AuthState>()(
       isLoading: false,
 
       login: async (email: string, password: string) => {
-        set({ isLoading: true });
-        
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        const user = users.find(u => u.email === email && u.password === password);
-        
-        if (user) {
-
-          if (!user.isActive) {
-            set({ isLoading: false });
-            throw new Error('Account has been deactivated. Please contact administrator.');
-          }
-
+        const user = mockUsers.find(u => u.email === email && u.password === password);
+        if (user && user.isActive) { // Changed from status === 'active'
           const { password: _, ...userWithoutPassword } = user;
-          set({ 
-            user: userWithoutPassword, 
-            isAuthenticated: true, 
-            isLoading: false 
-          });
+          set({ user: userWithoutPassword, isAuthenticated: true });
           return true;
         }
-        
-        set({ isLoading: false });
         return false;
       },
 
-      register: async (userData: RegisterData) => {
-        set({ isLoading: true });
-        
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Check if user already exists
-        const existingUser = users.find(u => u.email === userData.email);
-        if (existingUser) {
-          set({ isLoading: false });
-          return false;
-        }
-        
-        // Create new user
-        const newUser: User & { password: string } = {
+      register: async (userData) => {
+        const newUser: User = {
+          ...userData,
           id: Date.now().toString(),
-          email: userData.email,
-          password: userData.password,
-          name: userData.name,
-          phone: userData.phone,
-          role: userData.role,
-          studentId: userData.studentId,
-          department: userData.department,
+          joinDate: new Date(),
           createdAt: new Date(),
+          status: 'active',
           isActive: true,
+          role: userData.role || 'user'
         };
-        
-        users.push(newUser);
-        
-        const { password: _, ...userWithoutPassword } = newUser;
-        set({ 
-          user: userWithoutPassword, 
-          isAuthenticated: true, 
-          isLoading: false 
-        });
+        set({ user: newUser, isAuthenticated: true });
         return true;
       },
 
@@ -105,16 +63,23 @@ export const useAuthStore = create<AuthState>()(
         set({ user: null, isAuthenticated: false });
       },
 
-      updateProfile: (updates: Partial<User>) => {
+      deactivateUser: (userId: string) => {
+        const { user } = get();
+        if (user && user.id === userId) {
+          set({ user: null, isAuthenticated: false });
+        }
+      },
+
+      updateProfile: (data: Partial<User>) => {
         const currentUser = get().user;
         if (currentUser) {
-          const updatedUser = { ...currentUser, ...updates };
+          const updatedUser = { ...currentUser, ...data };
           set({ user: updatedUser });
           
           // Update in mock database
           const userIndex = users.findIndex(u => u.id === currentUser.id);
           if (userIndex !== -1) {
-            users[userIndex] = { ...users[userIndex], ...updates };
+            users[userIndex] = { ...users[userIndex], ...data };
           }
         }
       },

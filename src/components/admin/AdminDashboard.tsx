@@ -9,7 +9,8 @@ import {
   TrendingUp,
   Search,
   Eye,
-  Shield
+  Shield,
+  User
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -33,7 +34,7 @@ export function AdminDashboard() {
   }
 
   const stats = getAdminStats();
-  
+
   const filteredItems = items.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          item.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -46,6 +47,14 @@ export function AdminDashboard() {
   const handleVerifyItem = (itemId: string, notes?: string) => {
     verifyItem(itemId, notes);
     toast.success('Item verified successfully');
+  };
+
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short', 
+      day: 'numeric'
+    });
   };
 
   const handleToggleUserStatus = (userId: string, currentStatus: boolean) => {
@@ -490,12 +499,12 @@ export function AdminDashboard() {
                           >
                             {userData.isActive ? (
                               <>
-                                <UserX className="w-4 h-4" />
+                                <User className="w-5 h-5" />
                                 <span>Deactivate</span>
                               </>
                             ) : (
                               <>
-                                <UserCheck className="w-4 h-4" />
+                                <CheckCircle className="w-5 h-5" />
                                 <span>Activate</span>
                               </>
                             )}

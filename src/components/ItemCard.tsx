@@ -110,12 +110,11 @@ export function ItemCard({ item, showContact = false, onContact }: ItemCardProps
               
               {onContact && (
                 <button
-                  onClick={() => onContact(item)}
-                  className="px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700 transition-colors"
-                  onClick={(e) => { 
+                  onClick={(e) => {
                     e.stopPropagation(); 
-                    onContact(item); 
+                    onContact(item);
                   }}
+                  className="px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700 transition-colors"
                 >
                   Contact
                 </button>
