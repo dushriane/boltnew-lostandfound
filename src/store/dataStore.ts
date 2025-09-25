@@ -38,6 +38,13 @@ interface DataState {
   // Admin operations
   verifyItem: (id: string, adminNotes?: string) => void;
   getAdminStats: () => any;
+
+  getUserStats: (userId: string) => {
+    totalItems: number;
+    foundItems: number;
+    lostItems: number;
+    matches: number;
+  };
 }
 
 export const useDataStore = create<DataState>()(
@@ -252,6 +259,27 @@ export const useDataStore = create<DataState>()(
             item.id === id ? { ...item, isVerified: true, adminNotes } : item
           )
         }));
+      },
+
+      getUserStats: (userId: string) => {
+        const { items, matches } = get();
+        
+        // Filter items for the specific user
+        const userItems = items.filter(item => item.userId === userId);
+        
+        // Calculate user matches (where user is involved in either lost or found item)
+        const userMatches = matches.filter(match => {
+          const lostItem = items.find(item => item.id === match.lostItemId);
+          const foundItem = items.find(item => item.id === match.foundItemId);
+          return lostItem?.userId === userId || foundItem?.userId === userId;
+        });
+        
+        return {
+          totalItems: userItems.length,
+          foundItems: userItems.filter(item => item.type === 'found').length,
+          lostItems: userItems.filter(item => item.type === 'lost').length,
+          matches: userMatches.length,
+        };
       },
 
       getAdminStats: () => {
