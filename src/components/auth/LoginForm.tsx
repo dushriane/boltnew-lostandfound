@@ -19,12 +19,16 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: LoginFormData) => {
-    const success = await login(data.email, data.password);
-    
-    if (success) {
-      toast.success('Welcome back!');
-    } else {
-      toast.error('Invalid email or password');
+    try {
+      const success = await login(data.email, data.password);
+      
+      if (success) {
+        toast.success('Welcome back!');
+      } else {
+        toast.error('Invalid email or password');
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Login failed');
     }
   };
 

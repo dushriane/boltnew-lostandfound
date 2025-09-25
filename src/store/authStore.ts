@@ -11,6 +11,8 @@ interface AuthState {
   register: (userData: RegisterData) => Promise<boolean>;
   logout: () => void;
   updateProfile: (updates: Partial<User>) => void;
+  toggleUserStatus: (userId: string) => void;
+  getAllUsers: () => (User & { password: string })[];
 }
 
 interface RegisterData {
@@ -41,7 +43,13 @@ export const useAuthStore = create<AuthState>()(
         
         const user = users.find(u => u.email === email && u.password === password);
         
-        if (user && user.isActive) {
+        if (user) {
+
+          if (!user.isActive) {
+            set({ isLoading: false });
+            throw new Error('Account has been deactivated. Please contact administrator.');
+          }
+
           const { password: _, ...userWithoutPassword } = user;
           set({ 
             user: userWithoutPassword, 
@@ -109,6 +117,23 @@ export const useAuthStore = create<AuthState>()(
             users[userIndex] = { ...users[userIndex], ...updates };
           }
         }
+      },
+
+      toggleUserStatus: (userId: string) => {
+        const userIndex = users.findIndex(u => u.id === userId);
+        if (userIndex !== -1) {
+          users[userIndex].isActive = !users[userIndex].isActive;
+          
+          // If current user is being deactivated, log them out
+          const currentUser = get().user;
+          if (currentUser && currentUser.id === userId && !users[userIndex].isActive) {
+            set({ user: null, isAuthenticated: false });
+          }
+        }
+      },
+
+      getAllUsers: () => {
+        return users;
       },
     }),
     {

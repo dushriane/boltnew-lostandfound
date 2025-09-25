@@ -8,11 +8,11 @@ import { HomePage } from './pages/HomePage';
 import { ReportPage } from './pages/ReportPage';
 import { MyItemsPage } from './pages/MyItemsPage';
 import { MatchesPage } from './pages/MatchesPage';
-import { StatsPage } from './pages/StatsPage';
 import { ItemDetailPage } from './pages/ItemDetailPage';
 import { NotificationsPage } from './pages/NotificationsPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { AdminDashboard } from './components/admin/AdminDashboard';
+import { StatsPage } from './pages/StatsPage';
 
 function App() {
   const { isAuthenticated, user } = useAuthStore();
@@ -26,20 +26,30 @@ function App() {
     );
   }
 
+  // Redirect admin to admin dashboard
+  if (user?.role === 'admin' && window.location.pathname !== '/admin') {
+    window.location.href = '/admin';
+  }
+
   return (
     <Router>
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/report" element={<ReportPage />} />
-          <Route path="/my-items" element={<MyItemsPage />} />
-          <Route path="/matches" element={<MatchesPage />} />
-          <Route path="/notifications" element={<NotificationsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/item/:id" element={<ItemDetailPage />} />
           {user?.role === 'admin' && (
             <Route path="/admin" element={<AdminDashboard />} />
           )}
+          {user?.role !== 'admin' && (
+            <>
+              <Route path="/report" element={<ReportPage />} />
+              <Route path="/my-items" element={<MyItemsPage />} />
+              <Route path="/matches" element={<MatchesPage />} />
+              <Route path="/stats" element={<StatsPage />} />
+              <Route path="/item/:id" element={<ItemDetailPage />} />
+            </>
+          )}
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>
