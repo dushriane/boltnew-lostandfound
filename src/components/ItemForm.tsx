@@ -21,7 +21,8 @@ interface ItemFormData {
 }
 
 interface ItemFormProps {
-  onSubmit: (data: Omit<Item, 'id' | 'dateReported' | 'status' | 'isVerified'>) => void;
+  onSubmit: (data: ItemFormData) => void;
+  onCancel?: () => void;
   initialData?: Partial<ItemFormData>;
   isLoading?: boolean;
 }

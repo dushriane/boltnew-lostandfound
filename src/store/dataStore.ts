@@ -1,13 +1,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Item, Match, Notification, Payment } from '../types';
-import { mockItems } from '../data/mockData';
+import type { Item, Match, Notification, Payment, User } from '../types';
+import { mockItems, mockUsers} from '../data/mockData';
 import { findMatches } from '../utils/matching';
 import { generateMatchNotification, sendEmailNotification } from '../utils/notifications';
+import { ensureDate } from '../utils/date';
+
 
 interface DataState {
   items: Item[];
   matches: Match[];
+  users: User[]
   notifications: Notification[];
   payments: Payment[];
   loading: boolean;
@@ -18,6 +21,7 @@ interface DataState {
   deleteItem: (id: string) => void;
   getItemsByUser: (userId: string) => Item[];
   getAllItems: (page?: number, limit?: number) => Item[];
+  searchItems: (query: string) => Item[];
   
   // Match operations
   confirmMatch: (matchId: string) => void;
@@ -52,6 +56,7 @@ export const useDataStore = create<DataState>()(
     (set, get) => ({
       items: mockItems,
       matches: [],
+      users: mockUsers,
       notifications: [],
       payments: [],
       loading: false,
@@ -145,6 +150,19 @@ export const useDataStore = create<DataState>()(
         const items = get().items.filter(item => item.status === 'active');
         const startIndex = (page - 1) * limit;
         return items.slice(startIndex, startIndex + limit);
+      },
+
+      searchItems: (query) => {
+        const items = get().items;
+        const lowercaseQuery = query.toLowerCase();
+        
+        return items.filter((item) =>
+          item.title.toLowerCase().includes(lowercaseQuery) ||
+          item.description.toLowerCase().includes(lowercaseQuery) ||
+          item.location.toLowerCase().includes(lowercaseQuery) ||
+          item.category.toLowerCase().includes(lowercaseQuery) ||
+          item.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery))
+        );
       },
 
       confirmMatch: (matchId) => {
@@ -309,6 +327,24 @@ export const useDataStore = create<DataState>()(
         notifications: state.notifications,
         payments: state.payments,
       }),
+      serialize: (state) => {
+        return JSON.stringify(state, (key, value) => {
+          // Convert Date objects to ISO strings for storage
+          if (value instanceof Date) {
+            return { __type: 'Date', value: value.toISOString() };
+          }
+          return value;
+        });
+      },
+      deserialize: (str) => {
+        return JSON.parse(str, (key, value) => {
+          // Convert ISO strings back to Date objects
+          if (value && typeof value === 'object' && value.__type === 'Date') {
+            return new Date(value.value);
+          }
+          return value;
+        });
+      }
     }
   )
 );

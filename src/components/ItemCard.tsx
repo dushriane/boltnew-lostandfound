@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Item } from '../types';
 import { Calendar, MapPin, Tag, DollarSign, Phone, Mail } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow } from '../utils/date';
 
 interface ItemCardProps {
   item: Item;
