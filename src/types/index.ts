@@ -3,12 +3,12 @@ export interface User {
   email: string;
   name: string;
   phone?: string;
-  role: 'student' | 'faculty' | 'admin';
-  studentId?: string;
   department?: string;
-  createdAt: Date;
-  isActive: boolean;
-  profileImage?: string;
+  studentId?: string;
+  role: 'admin' | 'user';
+  status: 'active' | 'inactive';
+  joinDate: Date;
+  avatar?: string;
 }
 
 export interface Item {
