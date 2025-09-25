@@ -32,7 +32,8 @@ export function Layout({ children }: LayoutProps) {
     { name: 'Report Item', href: '/report', icon: Plus },
     { name: 'My Items', href: '/my-items', icon: List },
     { name: 'Matches', href: '/matches', icon: Mail },
-    { name: 'Statistics', href: '/stats', icon: BarChart3 },
+    { name: 'Notifications', href: '/notifications', icon: Bell },
+    { name: 'Profile', href: '/profile', icon: User },
   ];
 
   // Admin gets only admin dashboard

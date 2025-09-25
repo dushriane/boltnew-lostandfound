@@ -9,6 +9,9 @@ import { ReportPage } from './pages/ReportPage';
 import { MyItemsPage } from './pages/MyItemsPage';
 import { MatchesPage } from './pages/MatchesPage';
 import { StatsPage } from './pages/StatsPage';
+import { ItemDetailPage } from './pages/ItemDetailPage';
+import { NotificationsPage } from './pages/NotificationsPage';
+import { ProfilePage } from './pages/ProfilePage';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 
 function App() {
@@ -41,7 +44,9 @@ function App() {
               <Route path="/report" element={<ReportPage />} />
               <Route path="/my-items" element={<MyItemsPage />} />
               <Route path="/matches" element={<MatchesPage />} />
-              <Route path="/stats" element={<StatsPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/item/:id" element={<ItemDetailPage />} />
             </>
           )}
           <Route path="*" element={<Navigate to="/" replace />} />

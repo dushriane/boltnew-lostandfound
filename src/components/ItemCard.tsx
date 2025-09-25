@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Item } from '../types';
 import { Calendar, MapPin, Tag, DollarSign, Phone, Mail } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
@@ -10,10 +11,15 @@ interface ItemCardProps {
 }
 
 export function ItemCard({ item, showContact = false, onContact }: ItemCardProps) {
+  const navigate = useNavigate();
   const isLost = item.type === 'lost';
+
+  const handleViewDetails = () => {
+    navigate(`/item/${item.id}`);
+  };
   
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
+    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden cursor-pointer" onClick={handleViewDetails}>
       <div className={`h-2 ${isLost ? 'bg-error-500' : 'bg-success-500'}`} />
       
       <div className="p-6">
@@ -106,6 +112,10 @@ export function ItemCard({ item, showContact = false, onContact }: ItemCardProps
                 <button
                   onClick={() => onContact(item)}
                   className="px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700 transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onContact(item);
+                  }}
                 >
                   Contact
                 </button>
